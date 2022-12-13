@@ -10,9 +10,12 @@ class AuctionListing(models.Model):
     description = models.TextField(max_length=256)
     startbid = models.IntegerField()
     maker = models.ForeignKey(User, on_delete=models.CASCADE, related_name="maker")
-    winner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="winner")
+    # winner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="winner", blank=True)
     category = models.CharField(max_length=64, blank=True)
+    image = models.CharField(max_length=128, blank=True)
 
+    def __str__(self):
+        return f"{self.title}, {self.description} {self.startbid} {self.maker}"
 
 class AuctionBids(models.Model):
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder")
