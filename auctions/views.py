@@ -8,7 +8,10 @@ from .models import User, AuctionListing, AuctionBids, Comments
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    active_listings = AuctionListing.objects.filter(activestatus=True)
+    return render(request, "auctions/index.html",{
+        "active_listings": active_listings
+        })
 
 
 def login_view(request):
@@ -75,4 +78,5 @@ def createlisting(request):
         newlist = AuctionListing(title = title_, description = description_, startbid = startbid_, image = image_, category = category_, maker = maker_)
         newlist.save()
 
+        return HttpResponseRedirect(reverse(index))
     return render(request, "auctions/createlisting.html")
