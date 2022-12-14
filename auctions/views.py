@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
+from django.contrib.auth.decorators import login_required
 
 from .models import User, AuctionListing, AuctionBids, Comments
 
@@ -68,7 +69,7 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-
+@login_required
 def createlisting(request):
     if request.method == "POST":
         title_ = request.POST["title"]
@@ -88,7 +89,7 @@ def createlisting(request):
         return HttpResponseRedirect(reverse(index))
     return render(request, "auctions/createlisting.html")
 
-
+@login_required
 def placebid(request, listing_id):
     if request.method == "POST":
         listing = AuctionListing.objects.get(pk=listing_id)
@@ -125,6 +126,8 @@ def listing(request, listing_id):
         "highest_bid": highest_bid,
      })
 
+
+@login_required
 def add_watchlist(request, listing_id):
     listing = AuctionListing.objects.get(pk=listing_id)
     listing.watchlist.add(request.user)
@@ -132,6 +135,8 @@ def add_watchlist(request, listing_id):
     listingpage = AuctionListing.objects.get(id=listing_id)
     return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
 
+
+@login_required
 def remove_watchlist(request, listing_id):
     listing = AuctionListing.objects.get(pk=listing_id)
     listing.watchlist.remove(request.user)
@@ -139,8 +144,18 @@ def remove_watchlist(request, listing_id):
     listingpage = AuctionListing.objects.get(id=listing_id)
     return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
 
+
+@login_required
 def watchlist(request):
     watching = request.user.watchlist.all()
     return render(request, "auctions/watchlist.html", {
         "watching": watching
     })
+
+@login_required
+def close_listing(request, listing_id):
+    listing = AuctionListing.objects.get(pk=listing_id)
+    listing.activestatus = False
+    listing.save()
+    
+    return HttpResponseRedirect(reverse("listing", args=(listing.id,)))

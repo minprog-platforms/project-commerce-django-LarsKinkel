@@ -13,6 +13,8 @@
     </h5>
     <h6> Owner: {{ listing.maker }} <br><br>
 
+        <!-- Watchlist part of the listing page, only if logged in.  -->
+        {% if user.is_authenticated %}
         {% if watchlistbutton %}
             <form action="{% url 'remove_watchlist' listing.id %}" method="post">
                 {% csrf_token %}
@@ -24,8 +26,11 @@
                 <button type="submit">Add item to wishlist</button>
             </form>
         {% endif %}
+        {% endif %}
         <br>
 
+        <!-- Bidding part of the listing page, only if logged in and active. -->
+        {% if user.is_authenticated and listing.activestatus == True %}
         <form action="{% url 'placebid' listing.id %}" method="post">
             {% csrf_token %}
             <label for="bid">Place your bid:</label><br>
@@ -42,6 +47,18 @@
                 Make sure your bid is higher than the current highest bid.
             </div>
         {% endif %}
+        {% endif %}
+
+        <!-- Closing part of the listing page, only for the owner of the listing. -->
+        {% if user.is_authenticated and user == listing.maker and listing.activestatus == True %}
+            <form action="{% url 'close_listing' listing.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit"> Close Listing </button>
+            </form>
+        {% endif %}
+
+        <!-- Message if lising is closed -->
+        {% if user.is_authenticated and user == listing.winner %}
 
     </h6>
 </div>

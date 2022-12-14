@@ -2,6 +2,9 @@ body {
     padding: 10px;
 }
 
+a {
+    text-decoration: none;
+}
 textarea {
     width: 470px;
     height: 200px;

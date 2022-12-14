@@ -15,9 +15,7 @@ class AuctionListing(models.Model):
     image = models.CharField(max_length=256, blank=True)
     activestatus = models.BooleanField(default=True)
     watchlist = models.ManyToManyField(User, null = True, blank=True, related_name="watchlist")
-
-    def __str__(self):
-        return f"{self.title}, {self.description} {self.startbid} {self.maker}"
+    
 
 class AuctionBids(models.Model):
     price = models.DecimalField(max_digits = 12, decimal_places = 2)
