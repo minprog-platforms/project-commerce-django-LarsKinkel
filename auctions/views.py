@@ -3,9 +3,12 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django import forms
 
 from .models import User, AuctionListing, AuctionBids, Comments
 
+class Placebidform(forms.Form):
+    bid = forms.IntegerField(label="Place your bid")
 
 def index(request):
     active_listings = AuctionListing.objects.filter(activestatus=True)
@@ -75,19 +78,52 @@ def createlisting(request):
         image_ = request.POST["image"]
         maker_ = request.user
 
+
         newlist = AuctionListing(title = title_, description = description_, startbid = startbid_, image = image_, category = category_, maker = maker_)
         newlist.save()
+
+        firstbid = AuctionBids(price = startbid_, bid_item = newlist, bidder = maker_)
+        firstbid.save()
 
         return HttpResponseRedirect(reverse(index))
     return render(request, "auctions/createlisting.html")
 
+
+def placebid(request, listing_id):
+    if request.method == "POST":
+        listing = AuctionListing.objects.get(pk=listing_id)
+        currentbid = listing.startbid
+        bid = request.POST["bid"]
+        bid_item = listing
+        bidder = request.user
+        highest_bid = AuctionBids.objects.filter(bid_item = bid_item).order_by('-price')[0].price
+
+        if float(bid) > float(highest_bid):
+            newbid = AuctionBids(price = bid, bid_item = bid_item, bidder = bidder)
+            newbid.save()
+            updated = True
+            highest_bid = bid
+        else:
+            updated = False
+    else:
+        updated = ""
+
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "highest_bid": highest_bid,
+        "updated": updated
+     })
+
 def listing(request, listing_id):
     listing = AuctionListing.objects.get(id=listing_id)
     watchlistbutton = request.user in listing.watchlist.all()
+    highest_bid = AuctionBids.objects.filter(bid_item = listing).order_by('-price')[0].price
+
     return render(request, "auctions/listing.html", {
         "listing": listing,
-        "watchlistbutton": watchlistbutton
-    })
+        "watchlistbutton": watchlistbutton,
+        "highest_bid": highest_bid,
+     })
 
 def add_watchlist(request, listing_id):
     listing = AuctionListing.objects.get(pk=listing_id)

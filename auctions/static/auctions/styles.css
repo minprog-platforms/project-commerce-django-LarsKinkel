@@ -30,3 +30,17 @@ textarea {
     border-radius: 10px;
     padding: 10px;
 }
+
+.succesbid {
+    color: green;
+}
+
+.errorbid {
+    color: red;
+}
+
+.bidbar {
+    border: 4px solid lightblue;
+    border-radius: 8px;
+    padding: 4px;
+}

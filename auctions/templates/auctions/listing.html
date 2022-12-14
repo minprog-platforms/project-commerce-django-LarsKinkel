@@ -9,7 +9,7 @@
     {{ listing.description}} <br>
     </h6>
     <h5>
-    Current Price: €{{ listing.startbid}} <br>
+    Current Highest Bid: €{{ highest_bid }} <br>
     </h5>
     <h6> Owner: {{ listing.maker }} <br><br>
 
@@ -24,9 +24,25 @@
                 <button type="submit">Add item to wishlist</button>
             </form>
         {% endif %}
+        <br>
 
-        <!-- <a href="{% url 'add_watchlist' listing.id %}">Add item to wishlist:</a> <br> -->
-        <!-- <a href="{% url 'remove_watchlist' listing.id %}">Remove item from wishlist:</a> <br> -->
+        <form action="{% url 'placebid' listing.id %}" method="post">
+            {% csrf_token %}
+            <label for="bid">Place your bid:</label><br>
+            <input class="bidbar" type="text" id="bid" name="bid">
+        </form>
+        <br>
+        {% if updated == True %}
+            <div class = "succesbid">
+                Your bid has been placed!
+            </div>
+        {% elif updated == False %}
+            <div class="errorbid">
+                Your bid was too low. <br>
+                Make sure your bid is higher than the current highest bid.
+            </div>
+        {% endif %}
+
     </h6>
 </div>
 

@@ -20,7 +20,7 @@ class AuctionListing(models.Model):
         return f"{self.title}, {self.description} {self.startbid} {self.maker}"
 
 class AuctionBids(models.Model):
-    price = models.IntegerField()
+    price = models.DecimalField(max_digits = 12, decimal_places = 2)
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder")
     bid_item = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="bid_item")
 
