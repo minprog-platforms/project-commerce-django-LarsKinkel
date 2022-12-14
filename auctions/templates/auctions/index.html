@@ -1,20 +1,23 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2><br><br>
+    <h2>Active Listings</h2><br>
 
 
     {% for listing in active_listings%}
 
         <div class="prev">
             <h4>{{ listing.title }}</h4>
-            <img src=" {{ listing.image }}" alt="(The maker chose to not include an image)" width="350"><br><br>
+            <img src=" {{ listing.image }}" alt="(The maker chose to not include an image)" width="200"><br><br>
             <h6>
             {{ listing.description}} <br>
             </h6>
             <h5>
             Current Price: €{{ listing.startbid}} <br>
             </h5>
+            <h6> Owner: {{ listing.maker }} <br>
+                <a href="{% url 'listing' listing.id %}"> Click here to go to listing</a>
+            </h6>
         </div>
         <br>
     {% endfor %}

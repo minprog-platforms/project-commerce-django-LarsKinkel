@@ -2,8 +2,31 @@ body {
     padding: 10px;
 }
 
+textarea {
+    width: 470px;
+    height: 200px;
+    border: 4px solid lightgreen;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.searchbar {
+    border: 4px solid lightgreen;
+    border-radius: 8px;
+    padding: 4px;
+}
+
 .prev {
     width: 400px;
-    border: outset;
+    border: 4px solid lightgreen;
+    border-radius: 8px;
+    padding: 4px;
     text-align: center;
+}
+
+.create {
+    width: 500px;
+    border: 4px solid lightblue;
+    border-radius: 10px;
+    padding: 10px;
 }

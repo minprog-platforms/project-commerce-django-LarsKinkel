@@ -3,24 +3,26 @@
 {% block body %}
     <h2>Create New Listing</h2>
     <br>
-    <form action="{% url 'createlisting' %}" method="post">
-        {% csrf_token %}
-        <label for="title">Title for listing:</label><br>
-        <input type="text" id="title" name="title">
-        <br><br>
-        <label for="description">Add a description:</label><br>
-        <textarea name="description" id="description" rows="8" cols="80"></textarea>
-        <br><br>
-        <label for="startbid">Add a starting bid:</label><br>
-        <input type="text" name="startbid" id="startbid" min="0">
-        <br><br>
-        <label for="category">Add a category (optional):</label><br>
-        <input type="text" name="category">
-        <br><br>
-        <label for="image">Add the url of an image (optional):</label><br>
-        <input type="text" name="image" id="image"><br>
-        <br><br>
-        <input type="submit">
-        <br>
-    </form>
+    <div class="create">
+        <form action="{% url 'createlisting' %}" method="post">
+            {% csrf_token %}
+            <label for="title">Title for listing:</label><br>
+            <input class="searchbar" type="text" id="title" name="title">
+            <br><br>
+            <label for="description">Add a description:</label><br>
+            <textarea name="description" id="description"></textarea>
+            <br><br>
+            <label for="startbid">Add a starting bid:</label><br>
+            <input class="searchbar" type="text" name="startbid" id="startbid" min="0">
+            <br><br>
+            <label for="category">Add a category (optional):</label><br>
+            <input class="searchbar" type="text" name="category">
+            <br><br>
+            <label for="image">Add the url of an image (optional):</label><br>
+            <input class="searchbar" type="text" name="image" id="image"><br>
+            <br>
+            <input type="submit">
+            <br>
+        </form>
+    </div>
 {% endblock %}

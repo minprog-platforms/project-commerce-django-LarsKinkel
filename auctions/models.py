@@ -14,16 +14,18 @@ class AuctionListing(models.Model):
     category = models.CharField(max_length=64, blank=True)
     image = models.CharField(max_length=256, blank=True)
     activestatus = models.BooleanField(default=True)
+    watchlist = models.ManyToManyField(User, null = True, blank=True, related_name="watchlist")
 
     def __str__(self):
         return f"{self.title}, {self.description} {self.startbid} {self.maker}"
 
 class AuctionBids(models.Model):
+    price = models.IntegerField()
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder")
     bid_item = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="bid_item")
-    price = models.IntegerField()
+
 
 class Comments(models.Model):
+    comment_itself = models.CharField(max_length=256)
     comment_from = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_from")
     comment_on = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="comment_on")
-    comment_itself = models.CharField(max_length=256)

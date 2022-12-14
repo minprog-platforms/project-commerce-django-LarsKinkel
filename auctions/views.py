@@ -80,3 +80,31 @@ def createlisting(request):
 
         return HttpResponseRedirect(reverse(index))
     return render(request, "auctions/createlisting.html")
+
+def listing(request, listing_id):
+    listing = AuctionListing.objects.get(id=listing_id)
+    watchlistbutton = request.user in listing.watchlist.all()
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "watchlistbutton": watchlistbutton
+    })
+
+def add_watchlist(request, listing_id):
+    listing = AuctionListing.objects.get(pk=listing_id)
+    listing.watchlist.add(request.user)
+
+    listingpage = AuctionListing.objects.get(id=listing_id)
+    return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
+
+def remove_watchlist(request, listing_id):
+    listing = AuctionListing.objects.get(pk=listing_id)
+    listing.watchlist.remove(request.user)
+
+    listingpage = AuctionListing.objects.get(id=listing_id)
+    return HttpResponseRedirect(reverse("listing", args=(listing.id,)))
+
+def watchlist(request):
+    watching = request.user.watchlist.all()
+    return render(request, "auctions/watchlist.html", {
+        "watching": watching
+    })
