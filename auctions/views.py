@@ -116,7 +116,7 @@ def placebid(request, listing_id):
      })
 
 def listing(request, listing_id):
-    listing = AuctionListing.objects.get(id=listing_id)
+    listing = AuctionListing.objects.get(pk=listing_id)
     watchlistbutton = request.user in listing.watchlist.all()
     highest_bid = AuctionBids.objects.filter(bid_item = listing).order_by('-price')[0].price
 
@@ -156,6 +156,8 @@ def watchlist(request):
 def close_listing(request, listing_id):
     listing = AuctionListing.objects.get(pk=listing_id)
     listing.activestatus = False
+    highest_bidder = AuctionBids.objects.filter(bid_item = listing).order_by('-price')[0].bidder
+    listing.winner = highest_bidder
     listing.save()
-    
+
     return HttpResponseRedirect(reverse("listing", args=(listing.id,)))

@@ -57,8 +57,12 @@
             </form>
         {% endif %}
 
-        <!-- Message if lising is closed -->
-        {% if user.is_authenticated and user == listing.winner %}
+        <!-- Message if lising is closed, different message for winner and not winner -->
+        {% if user.is_authenticated and user == listing.winner and listing.activestatus == False %}
+            Congratulations! You won this auction.
+        {% elif user.is_authenticated and user != listing.winner and listing.activestatus == False %}
+            This page is closed, you lost the auction. 
+        {% endif %}
 
     </h6>
 </div>

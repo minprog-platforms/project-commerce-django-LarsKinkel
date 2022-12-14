@@ -10,12 +10,12 @@ class AuctionListing(models.Model):
     description = models.TextField(max_length=256)
     startbid = models.IntegerField()
     maker = models.ForeignKey(User, on_delete=models.CASCADE, related_name="maker")
-    # winner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="winner", blank=True)
+    winner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="winner", blank=True, null = True)
     category = models.CharField(max_length=64, blank=True)
     image = models.CharField(max_length=256, blank=True)
     activestatus = models.BooleanField(default=True)
     watchlist = models.ManyToManyField(User, null = True, blank=True, related_name="watchlist")
-    
+
 
 class AuctionBids(models.Model):
     price = models.DecimalField(max_digits = 12, decimal_places = 2)
