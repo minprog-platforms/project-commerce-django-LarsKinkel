@@ -8,11 +8,15 @@ from django.contrib.auth.decorators import login_required
 
 from .models import User, AuctionListing, AuctionBids, Comments
 
-class Placebidform(forms.Form):
-    bid = forms.IntegerField(label="Place your bid")
+# class Placebidform(forms.Form):
+#     bid = forms.IntegerField(label="Place your bid")
+#
+# class Commentform(forms.Form):
+#     comment = forms.CharField(widget=forms.Textarea(), label="Place your Comment")
 
 def index(request):
     active_listings = AuctionListing.objects.filter(activestatus=True)
+
     return render(request, "auctions/index.html",{
         "active_listings": active_listings
         })
@@ -79,7 +83,6 @@ def createlisting(request):
         image_ = request.POST["image"]
         maker_ = request.user
 
-
         newlist = AuctionListing(title = title_, description = description_, startbid = startbid_, image = image_, category = category_, maker = maker_)
         newlist.save()
 
@@ -91,11 +94,13 @@ def createlisting(request):
 
 @login_required
 def placebid(request, listing_id):
+
+    listing = AuctionListing.objects.get(pk=listing_id)
+    currentbid = listing.startbid
+    bid_item = listing
+
     if request.method == "POST":
-        listing = AuctionListing.objects.get(pk=listing_id)
-        currentbid = listing.startbid
         bid = request.POST["bid"]
-        bid_item = listing
         bidder = request.user
         highest_bid = AuctionBids.objects.filter(bid_item = bid_item).order_by('-price')[0].price
 
@@ -109,21 +114,50 @@ def placebid(request, listing_id):
     else:
         updated = ""
 
+    comments = Comments.objects.filter(comment_on = listing)
+
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "highest_bid": highest_bid,
-        "updated": updated
+        "updated": updated,
+        "comments": comments
      })
+
+
+# def comment(request, listing_id):
+#     comment_on = AuctionListing.objects.get(pk=listing_id)
+#
+#
+#
+#     return render(request, "auctions/listing.html", {
+#         "listing": comment_on,
+#         "comments": Comments.objects.filter(comment_on = comment_on)
+#      })
+
 
 def listing(request, listing_id):
     listing = AuctionListing.objects.get(pk=listing_id)
     watchlistbutton = request.user in listing.watchlist.all()
     highest_bid = AuctionBids.objects.filter(bid_item = listing).order_by('-price')[0].price
 
+    if request.method == "POST":
+        comment_itself = request.POST["comment"]
+        comment_from = request.user
+
+        new_comment = Comments(
+            comment_itself = comment_itself,
+            comment_on = listing,
+            comment_from = comment_from
+        )
+        new_comment.save()
+
+    comments = Comments.objects.filter(comment_on = listing)
+
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "watchlistbutton": watchlistbutton,
         "highest_bid": highest_bid,
+        "comments": comments
      })
 
 

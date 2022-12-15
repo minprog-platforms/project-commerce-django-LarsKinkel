@@ -1,9 +1,20 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h2>Auction: </h2>
+<h2>{{ listing.title }} </h2>
 <div>
-    <h4>{{ listing.title }}</h4>
+    <h4>
+        <!-- Message if lising is closed, different message for winner and not winner -->
+        {% if user.is_authenticated and user == listing.winner and listing.activestatus == False %}
+            <div class = "succesbid">
+                Congratulations! You won this auction.
+            </div>
+        {% elif user.is_authenticated and user != listing.winner and listing.activestatus == False %}
+            <div class = "errorbid">
+                This page is closed, you lost the auction.
+            </div>
+        {% endif %}
+    </h4>
     <img src=" {{ listing.image }}" alt="(The maker chose to not include an image)" width="350"><br><br>
     <h6>
     {{ listing.description}} <br>
@@ -13,17 +24,18 @@
     </h5>
     <h6> Owner: {{ listing.maker }} <br><br>
 
+    {% if user.is_authenticated and listing.activestatus == True %}
         <!-- Watchlist part of the listing page, only if logged in.  -->
         {% if user.is_authenticated %}
         {% if watchlistbutton %}
             <form action="{% url 'remove_watchlist' listing.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit">Remove item from wishlist</button>
+                <button type="submit">Remove item from watchlist</button>
             </form>
         {% elif not watchlistbutton %}
             <form action="{% url 'add_watchlist' listing.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit">Add item to wishlist</button>
+                <button type="submit">Add item to watchlist</button>
             </form>
         {% endif %}
         {% endif %}
@@ -31,22 +43,33 @@
 
         <!-- Bidding part of the listing page, only if logged in and active. -->
         {% if user.is_authenticated and listing.activestatus == True %}
-        <form action="{% url 'placebid' listing.id %}" method="post">
-            {% csrf_token %}
-            <label for="bid">Place your bid:</label><br>
-            <input class="bidbar" type="text" id="bid" name="bid">
-        </form>
-        <br>
-        {% if updated == True %}
-            <div class = "succesbid">
-                Your bid has been placed!
-            </div>
-        {% elif updated == False %}
-            <div class="errorbid">
-                Your bid was too low. <br>
-                Make sure your bid is higher than the current highest bid.
-            </div>
+            <form action="{% url 'placebid' listing.id %}" method="post">
+                {% csrf_token %}
+                <label for="bid">Place your bid:</label><br>
+                <input class="bidbar" type="text" id="bid" name="bid">
+            </form>
+            <br>
+            {% if updated == True %}
+                <div class = "succesbid">
+                    Your bid has been placed!
+                </div>
+            {% elif updated == False %}
+                <div class="errorbid">
+                    Your bid was too low. <br>
+                    Make sure your bid is higher than the current highest bid.
+                </div>
+            {% endif %}
         {% endif %}
+
+        <!-- Comment section of the page if user is logged in -->
+        {% if user.is_authenticated %}
+            <form action="{% url 'listing' listing.id %}" method="post">
+                {% csrf_token %}
+                <label for="comment">Place your comment here:</label><br>
+                <textarea name="comment" id="comment"></textarea><br>
+                <button type="submit"> Place Comment </button>
+            </form>
+            <br>
         {% endif %}
 
         <!-- Closing part of the listing page, only for the owner of the listing. -->
@@ -54,15 +77,19 @@
             <form action="{% url 'close_listing' listing.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit"> Close Listing </button>
-            </form>
+            </form> <br>
         {% endif %}
 
-        <!-- Message if lising is closed, different message for winner and not winner -->
-        {% if user.is_authenticated and user == listing.winner and listing.activestatus == False %}
-            Congratulations! You won this auction.
-        {% elif user.is_authenticated and user != listing.winner and listing.activestatus == False %}
-            This page is closed, you lost the auction. 
-        {% endif %}
+        <!-- Comments posted at the end of the page -->
+        {% for comment in comments %}
+        <FONT size ="2">
+             On {{ comment.comment_date }}, {{ comment.comment_from}} wrote:
+        </FONT>
+        <br>
+            {{ comment.comment_itself }}
+        <br><br><br>
+        {% endfor %}
+    {% endif %}
 
     </h6>
 </div>
