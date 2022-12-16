@@ -10,4 +10,4 @@ Pull the repository from github to your computer, then get the app running by ty
 
 ## Rough sketch of webpages
 
-![image]()
+![image](https://github.com/minprog-platforms/project-commerce-django-LarsKinkel/blob/main/Sketch/sketchcommerce.jpg?raw=true)
