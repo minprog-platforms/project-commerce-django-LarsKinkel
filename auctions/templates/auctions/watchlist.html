@@ -1,16 +1,24 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h2>My Watched Listings: </h2> <br>
-<div>
-    <h4>
-        {% for listing in watching%}
-            <li>
-                <a href="{% url 'listing' listing.id %}"> {{ listing.title }} </a><br>
-            </li>
-        {% endfor %}
 
-    </h4>
+<div class="container-fluid text-center">
+    <div class="row content">
+        <div class="col-sm-1 sidenav">
+        </div>
+        <div class="col-sm-8 text-left">
+            <h1>My Watchlist</h1><br>
+            {% for listing in watching%}
+                <li>
+                    <h4>
+                        <a href="{% url 'listing' listing.id %}" class="link-secondary"> {{ listing.title }} </a><br>
+                    </h4>
+                </li>
+            {% endfor %}
+        </div>
+        <div class="col-sm-3 sidenav">
+        </div>
+    </div>
 </div>
 
 {% endblock %}

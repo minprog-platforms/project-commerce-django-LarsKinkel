@@ -4,11 +4,16 @@
 <html lang="en">
     <head>
         <title>{% block title %}Auctions{% endblock %}</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous"> -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
+        <!-- <h1>Auctions</h1>
         <div>
             {% if user.is_authenticated %}
                 Signed in as <strong>{{ user.username }}</strong>.
@@ -16,31 +21,77 @@
                 Not signed in.
             {% endif %}
         </div>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'createlisting' %}">Create New Listing</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
-            </li>
-            {% if user.is_authenticated %}
+
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    <a class="nav-link" href="{% url 'createlisting' %}">Create New Listing</a>
                 </li>
-            {% endif %}
-        </ul>
-        <hr>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <hr>
+        </nav> -->
+
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <div class="navbar-brand">Auction Site </div>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+              <ul class="nav navbar-nav">
+
+                <li class="active"><a href="{% url 'index' %}">Active Listings</a></li>
+                {% if user.is_authenticated %}
+                    <li><a class="nav-link" href="{% url 'createlisting' %}">Create New Listing</a></li>
+                    <li><a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a></li>
+                    <li><a class="nav-link" href="{% url 'logout' %}">Log Out</a></li>
+                {% endif %}
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                        <li><a href="#">Signed in as <strong>{{ user.username }}</strong></a></li>
+                    {% else %}
+                        <li> <a href="#">You are not signed in:</strong></a></li>
+                        <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        <li><a href="{% url 'register' %}">Register</a></li>
+                    {% endif %}
+                    <!-- {% if not user.is_authenticated %}
+                        <li><a class="nav-link" href="{% url 'login' %}">Log In</a></li>
+                        <li><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                    {% endif %} -->
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+
+
         {% block body %}
         {% endblock %}
     </body>
+    <footer class="container-fluid text-center bg-dark ">
+      <p>Thanks for doing business!</p>
+    </footer>
 </html>

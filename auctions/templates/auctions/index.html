@@ -1,25 +1,35 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2><br>
 
-
-    {% for listing in active_listings%}
-        <div class="prev">
-            <h4><a href="{% url 'listing' listing.id %}">{{ listing.title }}</a></h4>
-            <a href="{% url 'listing' listing.id %}">
-            <img src=" {{ listing.image }}" alt="(The maker chose to not include an image)" width="200"><br><br>
-            </a>
-            <h6>
-                {{ listing.description}} <br>
-            </h6>
-            <h5>
-                Starting Price: €{{ listing.startbid}} <br>
-            </h5>
-            <h6>
-                Seller: {{ listing.maker }} <br>
-            </h6>
+    <div class="container-fluid text-center">
+        <div class="row content">
+            <div class="col-sm-1 sideblank">
+            </div>
+            <div class="col-sm-10 text-left">
+                <h1>Active Listings</h1><br>
+                {% for listing in active_listings%}
+                    <div class="prev">
+                        <h4><a href="{% url 'listing' listing.id %}">{{ listing.title }}</a></h4>
+                        <a href="{% url 'listing' listing.id %}">
+                        <img src=" {{ listing.image }}" alt="(The maker chose to not include an image)" width="200"><br><br>
+                        </a>
+                        <h6>
+                            {{ listing.description}} <br>
+                        </h6>
+                        <h5>
+                            Starting Price: €{{ listing.startbid}} <br>
+                        </h5>
+                        <h6>
+                            Seller: {{ listing.maker }} <br>
+                        </h6>
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+            <div class="col-sm-1 bg-dark sideblank">
+            </div>
         </div>
-        <br>
-    {% endfor %}
+    </div>
+
 {% endblock %}
